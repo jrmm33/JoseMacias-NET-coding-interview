@@ -17,9 +17,10 @@ namespace SecureFlight.Test
             testingContext.CreateDatabase();
             var repository = new BaseRepository<Airport>(testingContext);
             var mockRepository = new Mock<IRepository<Airport>>();
+            
             //TODO: Add test code here
             //Act
-            
+            await repository.GetByIdAsync(1);
             
             //Assert
             

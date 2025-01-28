@@ -27,10 +27,10 @@ public class AirportsController(
     [HttpPut("{code}")]
     [ProducesResponseType(typeof(AirportDataTransferObject), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResponseActionResult))]
-    public async Task<IActionResult> Put([FromRoute] string code, AirportDataTransferObject airportDto)
+    public async Task<IActionResult> Put([FromRoute] string code, [FromBody] AirportDataTransferObject airportDto)
     {
         var airport = await airportRepository.GetByIdAsync(code);
-        if (airport is null)
+        if (airport == null)
         {
             return NotFound($"Airport with code {code} not found.");
         }
@@ -39,6 +39,7 @@ public class AirportsController(
         airport.Country = airportDto.Country;
         airport.Name = airportDto.Name;
         var result = airportRepository.Update(airport);
+        await airportRepository.SaveChangesAsync();
         return MapResultToDataTransferObject<Airport, AirportDataTransferObject>(result);
     }
 }
